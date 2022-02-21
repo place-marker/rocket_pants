@@ -216,7 +216,10 @@ module RocketPants
       {}.tap do |metadata|
         metadata[:count]      = object.length unless singular
         metadata[:pagination] = Respondable.extract_pagination(object) if type == :paginated
-        metadata.merge! options[:metadata] if options[:metadata]
+        if options[:metadata].present?
+          options[:metadata].try(:permit!)
+          metadata.merge! options[:metadata]
+        end
       end
     end
 
