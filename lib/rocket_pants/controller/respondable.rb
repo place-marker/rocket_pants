@@ -25,6 +25,10 @@ module RocketPants
       end
     end
 
+    def self.invalid?(object)
+      object.respond_to?(:errors) && object.errors.present?
+    end
+
     def self.paginated?(object)
       !pagination_type(object).nil?
     end
@@ -164,7 +168,11 @@ module RocketPants
       elsif Respondable.collection?(object)
         collection object, options
       else
-        resource object, options
+        if Respondable.invalid?(object)
+          error! :invalid_resource, object.errors
+        else
+          resource object, options
+        end
       end
     end
     alias expose exposes
