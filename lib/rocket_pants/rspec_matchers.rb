@@ -76,7 +76,7 @@ module RocketPants
         @error.present? && (error_type.blank? || RSpecMatchers.normalised_error(@error) == error_type)
       end
 
-      failure_message_for_should do |response|
+      failure_message do |response|
         if @error.blank?
           "expected #{error_type || "any error"} on response, got no error"
         else error_type.present? && (normalised = RSpecMatchers.normalised_error(@error)) != error_type
@@ -84,7 +84,7 @@ module RocketPants
         end
       end
 
-      failure_message_for_should_not do |response|
+      failure_message_when_negated do |response|
         "expected response to not have an #{error_type || "error"}, but it did (#{@error})"
       end
 
@@ -114,10 +114,30 @@ module RocketPants
 
     end
 
+    matcher :have_exposed do |*args|
+      normalised_response = RSpecMatchers.normalise_response(*args)
+
+      match do |response|
+        @decoded = RSpecMatchers.normalise_urls(response.json_decoded_body["response"])
+        normalised_response == @decoded
+      end
+
+      failure_message do |response|
+        message = "expected api to have exposed #{normalised_response.inspect}, got #{@decoded.inspect} instead."
+        if differ = RSpecMatchers.differ
+          message << "\n\nDiff: #{differ.diff_as_object(@decoded, normalised_response)}"
+        end
+        message
+      end
+
+      failure_message_when_negated do |response|
+        "expected api to not have exposed #{normalised_response.inspect}"
+      end
+    end
+
     def be_api_error(error = nil)
       _be_api_error error
     end
-
 
   end
 end
