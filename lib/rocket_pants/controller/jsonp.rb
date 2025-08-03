@@ -32,7 +32,7 @@ module RocketPants
     private
 
     def jsonp_is_possible?
-      request.get? && response.content_type == "application/json" && jsonp_parameter.present?
+      request.get? && response.media_type == "application/json" && jsonp_parameter.present?
     end
 
     def jsonp_parameter
