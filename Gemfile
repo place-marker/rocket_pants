@@ -7,10 +7,10 @@ group :development, :test do
   # stable forked version of active_model_serializers in order to write an integration test
   gem 'active_model_serializers', git: 'git@github.com:indiegogo/active_model_serializers.git', branch: '0-8-stable'
 
-  # currently tested against 7.0
-  gem 'railties', '~> 7.0'
-  gem 'actionpack', '~> 7.0'
-  gem 'activerecord', '~> 7.0'
+  # currently tested against 8.0
+  gem 'railties', '~> 8.0'
+  gem 'actionpack', '~> 8.0'
+  gem 'activerecord', '~> 8.0'
 end
 
 gemspec
